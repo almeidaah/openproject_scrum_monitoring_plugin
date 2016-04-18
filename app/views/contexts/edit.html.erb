@@ -1,0 +1,9 @@
+<% html_title l(:label_administration), "#{l(:label_edit)} 'Contexto:' #{h @context.name}" %>
+<%= toolbar title: "Contexto: #{h @context.name}"%>
+
+<%= labelled_tabular_form_for(@context) do |f| %>
+  <%= render :partial => 'form', :locals => { :f => f } %>
+  <%= styled_button_tag l(:button_save), class: '-highlight -with-icon icon-yes' %>
+<% end %>
+
+

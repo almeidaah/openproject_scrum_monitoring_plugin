@@ -1,0 +1,24 @@
+<%= error_messages_for 'project' %>
+
+<!--[form:project]-->
+
+<section class="form--section">
+  <%= render partial: "projects/form/project_attributes",
+             locals: { project: project,
+                       form: f } %>
+
+  <%= call_hook(:view_projects_form,
+                project: project,
+                form: f) %>
+</section>
+
+<!--<% if project.new_record? %>
+  <div>
+    <%= render partial: "projects/form/modules",
+               locals: { form: f } %>
+  </div>
+
+  <%= javascript_tag 'observeProjectModules();' %>
+<% end %>-->
+
+<!--[eoform:project]-->
