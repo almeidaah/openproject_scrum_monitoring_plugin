@@ -16,4 +16,6 @@ Gem::Specification.new do |s|
   s.files = Dir["{app,config,db,lib}/**/*"] + %w(CHANGELOG.md README.md)
 
   s.add_dependency "rails", "~> 3.2.14"
+  s.add_dependency "rugged"
+  
 end

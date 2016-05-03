@@ -8,7 +8,6 @@ module OpenProject::ScrumMonitoring
 
     def self.settings
     {
-      #:partial => 'shared/settings' 
     }
     end
 
@@ -18,17 +17,21 @@ module OpenProject::ScrumMonitoring
            :author_url => 'http://fernando.almeida',
            :requires_openproject => '>= 3.0.0pre13',
            :settings => settings do
-
-          #Redmine::AccessControl.permission(:edit_project).actions << "projects/save_project_configs"
-
           Redmine::MenuManager.map :admin_menu do |menu|
               menu.push :contexts,
                         { controller: '/contexts' },
                         caption: "Contextos",
                         html: { class: 'statuses icon2 icon-flag' }
-              end
-         end
+          end
+          #Redmine::MenuManager.map :admin_menu do |menu|
+          #      menu.push :counter_repositories,
+          #              { controller: '/counter_repositories'},
+          #              caption: "Repositórios",
+          #              html: { class: 'icon2 icon-settings2' }
+          #    end
+           end
+
     #:ProjectsController Removido
-    patches [:Group]
+    patches [:Group, :WorkPackage]
     end 
 end

@@ -1,0 +1,20 @@
+<div class="work_package issue details">
+  <div class="meta">
+    <% attributes = work_package_show_attributes(work_package) %>
+    <div id="left" style="float:left; width:50%;">
+      <dl class="attributes-key-value">
+        <% attributes[:left].each do |attribute| %>
+          <%= attribute.field.html_safe %>
+        <% end %>
+      </dl>
+    </div>
+    <div id="right" style="float:left; width:50%;">
+      <dl class="attributes-key-value">
+        <% attributes[:right].each do |attribute| %>
+          <%= attribute.field.html_safe %>
+        <% end %>
+      </dl>
+    </div>
+    <br style="clear:both;" />
+  </div>
+</div>

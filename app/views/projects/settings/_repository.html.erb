@@ -1,0 +1,48 @@
+<table class="list">
+  <thead>
+    <tr align="left">
+      <th>Name</th>
+      <th>URL</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% for counter_repository in CounterRepository.find(:all) %>
+      <tr>
+        <td><%=counter_repository.name%> </td>
+        <td><%=counter_repository.url%> </td>
+        <td class="buttons">
+        <%= delete_link counter_repository_path(counter_repository)%></td>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br /><br />
+
+<p><b> New Repository </b></p>
+
+
+<%= form_tag("/counter_repositories/create", method: "post") do %>
+  <input name="project_id" type="hidden" value="<%=@project.id%>" />
+  <table>
+  <tr>
+    <td>Name</td>
+    <td><%= text_field_tag(:name) %></td>
+  </tr>
+  <tr>
+    <td>URL</td>
+    <td><%= text_field_tag(:url) %></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td><%= styled_button_tag l(:button_save), class: '-highlight -with-icon icon-yes' %></td>
+  </tr>
+  </tr>
+  </table>
+  
+<% end %>
+
+
+
