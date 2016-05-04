@@ -1,0 +1,31 @@
+# English strings go here for Rails i18n
+en:
+  label_issue_branches: 'Branches'
+  label_search_for_branches: "Search for branches"
+  label_branch_search: 'Search for branch:'
+  label_no_repositories: 'There are no repositories for this project'
+  label_new_repository: 'New Repository'
+  label_estimated_lines: 'Estimated Lines'
+  label_commited_lines: 'Commited Lines'
+  label_calculated_hours_percentage: '% Hours'
+  label_calculated_lines_percentage: '% Lines'
+  label_calculated_productivity: 'Productivity'
+  label_calculated_estimated_time: 'Estimated Time (Calc.)'
+  label_monitoring: 'Monitoring'
+  label_projected_hours: 'Projected Hours'
+  label_projected_lines: 'Projected Lines'
+  label_complexity_low: 'Low'
+  label_complexity_medium: 'Medium'
+  label_complexity_high: 'High'
+  add_issue_branches: 'Add Branches'
+  lines: 'Lines'
+  field_repository_name: 'Name'
+  field_repository_url: 'URL'
+  field_estimated_lines: 'Estimated lines'
+  field_inspection_preparation_average: 'Inspection Preparation Average'
+  field_inspection_average: 'Inspection Duration Average'
+  field_rework_average: 'Rework Average'
+  field_productivity_average: 'Productivity Average'
+
+
+  permission_configure_project_settings: 'Set Monitoring Project Settings'

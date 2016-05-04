@@ -1,23 +1,19 @@
-require_dependency 'work_packages_controller'
+require_dependency 'work_package'
 
 module OpenProject::ScrumMonitoring::Patches::WorkPackagePatch
   def self.included(base)
       base.class_eval do
- #       include InstanceMethods
- #       extend ClassMethods
+       #unloadable
+       #include InstanceMethods
+       #extend ClassMethods
+       has_many :branches
       end
   end
 
-#  module InstanceMethods
-#    def update
-#      puts '==================PARAMETROS_INSTANCEMETHODS====================='
-#    end
-#  end
-#  module ClassMethods
-#    def update
-#      puts '==================PARAMETROS_CLASSMETHODS====================='
-#    end
-#  end
+  #module InstanceMethods
+  #end
+  #module ClassMethods
+  #end
 end
 
 WorkPackage.send(:include, OpenProject::ScrumMonitoring::Patches::WorkPackagePatch)

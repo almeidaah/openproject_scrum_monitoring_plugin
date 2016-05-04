@@ -84,12 +84,13 @@ See doc/COPYRIGHT.rdoc for more details.
     </div>
   <% end %>
 
-  <% if User.current.allowed_to?(:add_work_package_watchers, project) ||
+<!--Watchers Hidded from Scrum-Openproject-Plugin. We do not use watchers here.-->
+<!--  <% if User.current.allowed_to?(:add_work_package_watchers, project) ||
     (work_package.watchers.present? && User.current.allowed_to?(:view_work_package_watchers, project)) %>
     <div id="watchers" class="attributes-group">
       <%= render :partial => 'watchers/watchers', :locals => {:watched => work_package} %>
     </div>
-  <% end %>
+  <% end %>-->
 </div>
 <div style="clear: both;"></div>
 

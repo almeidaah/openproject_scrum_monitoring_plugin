@@ -3,6 +3,7 @@ OpenProject::Application.routes.draw do
   resources :contexts
   resources :grupos
   resources :counter_repositories
+  resources :branches
 
   get 'contexts/new', :to => 'contexts#new'
   get 'admin/groups/new', :to => 'grupos#new'
