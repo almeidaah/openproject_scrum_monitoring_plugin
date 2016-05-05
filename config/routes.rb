@@ -8,4 +8,7 @@ OpenProject::Application.routes.draw do
   get 'contexts/new', :to => 'contexts#new'
   get 'admin/groups/new', :to => 'grupos#new'
   post 'admin/groups', :to => 'grupos#create'
+  post 'branches/append', :to => 'branches#append'
+  post 'branches', :to => 'branches#create'
+
 end

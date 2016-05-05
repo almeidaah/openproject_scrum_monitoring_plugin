@@ -5,9 +5,9 @@ class BranchesController < ApplicationController
     @repositories = CounterRepository.where(:project_id => @work_package.project_id).all
   end
 
-  def append
-    @work_package = WorkPackage.find(params[:work_package_id])
-    @branches = []
+  def create
+    @work_package = WorkPackage.find(params[:work_package])
+    @branches = Array.new
 
     params[:branch][:branch_ids].each do |val|
       branch_name = val.split(',')[1]
@@ -20,9 +20,9 @@ class BranchesController < ApplicationController
         branch.work_package = @work_package
         branch.save!
         @branches << branch
+        redirect_to work_package_path(@work_package)
       end
     end
-
   end
 
   def destroy

@@ -1,11 +1,10 @@
+<h2 class="title">Work Package : <%=@work_package%></h2>
 <h3 class="title"><%= l(:add_issue_branches) %></h3>
 
 <%= form_tag({:controller => 'branches',
-              :action => ('append'),
               :work_package => @work_package,
               :project_id => @work_package.project_id},
-             :remote => true,
-             :method => :post,
+              :method => :post,
              :id => 'new-branch-form') do %>
 
     <div id="branches_for_wp">
@@ -17,7 +16,6 @@
       <% end %>
     </div>
     <p class="buttons">
-      <%= submit_tag l(:button_add), :name => nil, :onclick => "hideModal(this);" %>
-      <%= submit_tag l(:button_cancel), :name => nil, :onclick => "hideModal(this);", :type => 'button' %>
+      <%= styled_button_tag l(:button_save), class: '-highlight -with-icon icon-yes' %>
     </p>
 <% end %>

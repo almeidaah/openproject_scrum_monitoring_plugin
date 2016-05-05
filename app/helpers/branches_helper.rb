@@ -11,8 +11,7 @@ module BranchesHelper
              :work_package_id => branch.work_package,
              :branch_id => branch}
       s << "#{branch.name} ".html_safe
-      s << link_to(image_tag('delete.png'), url,
-                   :remote => true, :method => 'delete', :class => "delete")
+      s << link_to(l(:button_delete), branch, :confirm => l(:text_are_you_sure), :method => :delete, :class => 'icon icon-delete')
       #end
       content << content_tag('li', s, :class => "branch-#{branch.id}", :id =>"work_package_branch_id_#{branch.id}")
     end
