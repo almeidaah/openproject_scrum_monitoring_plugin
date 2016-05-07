@@ -20,15 +20,17 @@ class BranchesController < ApplicationController
         branch.work_package = @work_package
         branch.save!
         @branches << branch
-        redirect_to work_package_path(@work_package)
       end
     end
+    redirect_to work_package_path(@work_package)
+
   end
 
   def destroy
     @work_package = WorkPackage.find(params[:work_package_id])
     branch = Branch.find(params[:branch_id])
     branch.destroy
+    redirect_to work_package_path(@work_package)
   end
 
 end

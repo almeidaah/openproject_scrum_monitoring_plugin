@@ -11,7 +11,9 @@
       <% @repositories.each do |rep| %>
           <p><strong><%= "#{rep.name}" %></strong></p>
           <% rep.branches.each do |branch| %>
+              <% if Branch.where(:name => branch.name, :work_package_id => @work_package._id).first.nil?then %>
               <p><%= check_box_tag 'branch[branch_ids][]', "#{rep.id},#{branch.name}" %> <%= branch.name %></p>
+              <% end %>
           <% end %>
       <% end %>
     </div>

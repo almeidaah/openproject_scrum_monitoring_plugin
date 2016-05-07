@@ -16,10 +16,7 @@ class CounterRepositoriesController < ApplicationController
 
   def destroy
      @counter_repository = params[:counter_repository]
-     puts @counter_repository
-     
      @counter_repository.destroy
-     
      flash[:notice] = l(:notice_successful_delete)
      redirect_to :controller => 'projects/' << @project.name.downcase.tr(' ', '_'), :action => 'settings', :tab => 'repository'
   end

@@ -4,14 +4,15 @@ module BranchesHelper
     #remove_allowed = User.current.allowed_to?("delete_#{issue.class.name.underscore}_watchers".to_sym, issue.project)
     content = ''.html_safe
     branches.each do |branch|
+      @repository = CounterRepository.find(branch.counter_repository_id)
       s = ''.html_safe
-      #if remove_allowed
       url = {:controller => 'branches',
              :action => 'destroy',
              :work_package_id => branch.work_package,
              :branch_id => branch}
+      s << @repository.name << " - "       
       s << "#{branch.name} ".html_safe
-      s << link_to(l(:button_delete), branch, :confirm => l(:text_are_you_sure), :method => :delete, :class => 'icon icon-delete')
+      s << link_to(l(:button_delete), url, :confirm => l(:text_are_you_sure), :method => :delete, :class => 'icon icon-delete')
       #end
       content << content_tag('li', s, :class => "branch-#{branch.id}", :id =>"work_package_branch_id_#{branch.id}")
     end
