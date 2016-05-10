@@ -17,9 +17,20 @@ class GruposController < ApplicationController
   # POST /grupos
   def create
     @group = Group.new permitted_params.group
-    puts "GRUPONOVOGRUPONOVOGRUPONOVOGRUPONOVOGRUPONOVOGRUPONOVOGRUPONOVOGRUPONOVO"
+
+    puts permitted_params
     respond_to do |format|
       if @group.save
+        
+        puts @group.attributes
+        @group_context = GroupContext.new
+        @group_context.group_id = @group._id
+        
+        @context = Context.find(params[:context])
+        @group_context.context = @context._id
+
+        @group_context.save
+
         flash[:notice] = l(:notice_successful_create)
         format.html { redirect_to(groups_path) }
         format.xml  { render xml: @group, status: :created, location: @group }
