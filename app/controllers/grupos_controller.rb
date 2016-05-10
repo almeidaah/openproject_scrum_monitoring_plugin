@@ -17,7 +17,7 @@ class GruposController < ApplicationController
   # POST /grupos
   def create
     @group = Group.new permitted_params.group
-
+    puts "GRUPONOVOGRUPONOVOGRUPONOVOGRUPONOVOGRUPONOVOGRUPONOVOGRUPONOVOGRUPONOVO"
     respond_to do |format|
       if @group.save
         flash[:notice] = l(:notice_successful_create)
