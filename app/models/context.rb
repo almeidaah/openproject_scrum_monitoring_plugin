@@ -1,12 +1,13 @@
 class Context < ActiveRecord::Base
   extend Pagination::Model
 
-  has_many :correction_factors      
+  has_many :correction_factors 
+  attr_accessible :id
 
-  def update_correction_factors(correction_factors)  
+  def update_correction_factors(correction_factors, context_id)  
       correction_factors.each do |c|
         unless c[:value].nil?
-          correction_factor = CorrectionFactor.where(:type_id => c[:type_id], :complexity => c[:complexity]).first
+          correction_factor = CorrectionFactor.where(:type_id => c[:type_id], :complexity => c[:complexity], :context_id => context_id).first
           if correction_factor.nil?
             correction_factor = CorrectionFactor.new
             correction_factor.context = self

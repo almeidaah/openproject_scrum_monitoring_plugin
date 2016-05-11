@@ -15,8 +15,12 @@ class ContextsController < ApplicationController
   end
 
   def create
+    puts params
     @context = Context.new(params[:context])
+
     if @context.save
+      @context.update_correction_factors(params[:correction_factors], @context.id)
+
       flash[:notice] = l(:notice_successful_create)
       redirect_to action: 'index'
     else
@@ -31,7 +35,7 @@ class ContextsController < ApplicationController
 
   def update
     @context = Context.find(params[:id])
-    @context.update_correction_factors(params[:correction_factors])
+    @context.update_correction_factors(params[:correction_factors], @context.id)
 
     if @context.update_attributes(params[:context])
       flash[:notice] = l(:notice_successful_update)
@@ -41,7 +45,12 @@ class ContextsController < ApplicationController
 
   def destroy
       @context = Context.find(params[:id])
+      
+      @correction_factors = CorrectionFactor.where(:context_id => @context.id).all
+      CorrectionFactor.destroy(@correction_factors)
+      
       @context.destroy
+
       flash[:notice] = l(:notice_successful_delete)
       redirect_to action: 'index'
   end

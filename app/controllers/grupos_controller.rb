@@ -14,20 +14,24 @@ class GruposController < ApplicationController
     end
   end
 
+  # GET /groups/1/edit
+  def edit
+    @group = Group.find(params[:id], include: [:users, :memberships])
+    @contexts = Context.all
+  end
+
   # POST /grupos
   def create
     @group = Group.new permitted_params.group
 
-    puts permitted_params
     respond_to do |format|
       if @group.save
-        
-        puts @group.attributes
+
         @group_context = GroupContext.new
+        @context = params[:context]
+        @group_context.context_id = @context[:id]
+
         @group_context.group_id = @group._id
-        
-        @context = Context.find(params[:context])
-        @group_context.context = @context._id
 
         @group_context.save
 
@@ -36,6 +40,35 @@ class GruposController < ApplicationController
         format.xml  { render xml: @group, status: :created, location: @group }
       else
         format.html { render action: 'new' }
+        format.xml  { render xml: @group.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
+  # PUT /groups/1
+  # PUT /groups/1.xml
+  def update
+    @group = Group.find(params[:id], include: :users)
+
+
+    respond_to do |format|
+      if @group.update_attributes(permitted_params.group)
+
+        @group_context = GroupContext.where(:group_id => @group._id)
+        GroupContext.destroy(@group_context)
+
+        @group_context = GroupContext.new
+        @context = params[:context]
+        @group_context.context_id = @context[:id]
+        @group_context.group_id = @group._id
+        @group_context.save
+
+
+        flash[:notice] = l(:notice_successful_update)
+        format.html { redirect_to(groups_path) }
+        format.xml  { head :ok }
+      else
+        format.html { render action: 'edit' }
         format.xml  { render xml: @group.errors, status: :unprocessable_entity }
       end
     end
