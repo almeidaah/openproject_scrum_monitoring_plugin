@@ -8,14 +8,14 @@ class BranchesController < ApplicationController
   def create
     @work_package = WorkPackage.find(params[:work_package])
     @branches = Array.new
-
     params[:branch][:branch_ids].each do |val|
-      branch_name = val.split(',')[1]
+      branch_name = val.split(',')[0][1]
       if Branch.where(:work_package_id => @work_package.id, :name => branch_name).first.nil?
-        repository_id = val.split(',')[0]
+        repository_id = val.split(',')[0][0]
         repository = CounterRepository.find(repository_id)
         branch = Branch.new
-        branch.name = branch_name
+        #substring para ignorar o repotitory_id, adicionado por causa do radiobutton em tela
+        branch.name = branch_name[2..branch_name.length]
         branch.counter_repository = repository
         branch.work_package = @work_package
         branch.save!

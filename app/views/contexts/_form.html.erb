@@ -20,6 +20,7 @@ Complexity
         <th style="padding:12px">High</th>
 	</thead>
 	<tbody>
+    
 		<% @types.each do |type| %>
 
    			 <tr>
@@ -27,7 +28,7 @@ Complexity
 					<%=type.name%>
 				</td>
 
-				<td style="padding:8px">
+				<!--<td style="padding:8px">
 				
 					<% c = @context.correction_factors.where(:type_id => type.id, :complexity => 'Low').first %>
 			 		<% value = c.value unless c.nil? %>
@@ -47,8 +48,10 @@ Complexity
                   <input name="correction_factors[][value]" type="number" value="<%= value %>" step="0.01"/>
                    <input name="correction_factors[][type_id]" value="<%= type.id %>"type="hidden" step="0.01"/>
                   <input name="correction_factors[][complexity]" value="High"type="hidden" step="0.01"/>
-   			 </tr>
+   			-->
+         </tr>
         <% end %>
+
 	</tbody>
 </table>
 

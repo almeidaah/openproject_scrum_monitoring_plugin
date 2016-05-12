@@ -15,7 +15,6 @@ class ContextsController < ApplicationController
   end
 
   def create
-    puts params
     @context = Context.new(params[:context])
 
     if @context.save

@@ -9,13 +9,17 @@
 
     <div id="branches_for_wp">
       <% @repositories.each do |rep| %>
-          <p><strong><%= "#{rep.name}" %></strong></p>
-          <% rep.branches.each do |branch| %>
-              <% if Branch.where(:name => branch.name, :work_package_id => @work_package._id).first.nil?then %>
-              <p><%= check_box_tag 'branch[branch_ids][]', "#{rep.id},#{branch.name}" %> <%= branch.name %></p>
-              <% end %>
-          <% end %>
+    <!--Condicional que mostra as branches apenas quando ainda não há uma branch associada a esta tarefa.
+      Caso a branch de um repositório X seja selecionada, devem ser ocultadas as demais branches desse repositório -->
+      <% if Branch.where(:counter_repository_id => rep.id, :work_package_id => @work_package._id).first.nil?then %>
+            <p><strong><%= "#{rep.name}" %></strong></p>
+            <% rep.branches.each do |branch| %>
+                <% if Branch.where(:name => branch.name, :work_package_id => @work_package._id).first.nil?then %>
+                <p><%= radio_button_tag 'branch[branch_ids]['"#{rep.id}"']', "#{rep.id},#{branch.name}" %> <%= branch.name %></p>
+                <% end %>
       <% end %>
+    <% end %>
+<% end %>
     </div>
     <p class="buttons">
       <%= styled_button_tag l(:button_save), class: '-highlight -with-icon icon-yes' %>
