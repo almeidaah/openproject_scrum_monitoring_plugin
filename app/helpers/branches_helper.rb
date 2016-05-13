@@ -12,7 +12,11 @@ module BranchesHelper
              :branch_id => branch}
       s << @repository.name << " - "       
       s << "#{branch.name} ".html_safe
+      s << " | ".html_safe 
+      s << "#{branch.diff}"
+      s << " lines".html_safe
       s << link_to(l(:button_delete), url, :confirm => l(:text_are_you_sure), :method => :delete, :class => 'icon icon-delete')
+      
       #end
       content << content_tag('li', s, :class => "branch-#{branch.id}", :id =>"work_package_branch_id_#{branch.id}")
     end
