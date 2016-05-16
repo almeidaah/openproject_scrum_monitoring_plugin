@@ -21,36 +21,41 @@ Complexity
 	</thead>
 	<tbody>
     
-		<% @types.each do |type| %>
+  <% sql = "Select possible_values from custom_field_translations where name = 'Subtype' " %>
+  <% records_array = ActiveRecord::Base.connection.execute(sql) %>
+  <% @subtypes = records_array.first[0] %>
 
+  <% @subtypes.each_line {|s| 
+    next if s.include?"---" %>
+    
    			 <tr>
    				<td style="padding:12px">
-					<%=type.name%>
+          <%= s = s.sub('-','').strip%>
 				</td>
 
-				<!--<td style="padding:8px">
-				
-					<% c = @context.correction_factors.where(:type_id => type.id, :complexity => 'Low').first %>
-			 		<% value = c.value unless c.nil? %>
+				<td style="padding:8px">
+      
+        <% c = @context.correction_factors.where(:type_id => s, :complexity => 'Low').first %>
+                  <% value = c.value unless c.nil? %>
                   <input name="correction_factors[][value]" type="number" value="<%= value %>" step="0.01"/>
-                   <input name="correction_factors[][type_id]" value="<%= type.id %>"type="hidden" step="0.01"/>
+                  <input name="correction_factors[][type_id]" value="<%=s%>" type="hidden" />
                   <input name="correction_factors[][complexity]" value="Low"type="hidden" step="0.01"/>
 				<td style="padding:8px">
-					<% c = @context.correction_factors.where(:type_id => type.id, :complexity => 'Medium').first %>
-			 		<% value = c.value unless c.nil? %>
-                  <input name="correction_factors[][value]" type="number" value="<%= value %>" step="0.01"/>
-                   <input name="correction_factors[][type_id]" value="<%= type.id %>"type="hidden" step="0.01"/>
-                  <input name="correction_factors[][complexity]" value="Medium"type="hidden" step="0.01"/>
 
-				<td style="padding:8px">
-					<% c = @context.correction_factors.where(:type_id => type.id, :complexity => 'High').first %>
-			 		<% value = c.value unless c.nil? %>
+          <% c = @context.correction_factors.where(:type_id => s, :complexity => 'Medium').first %>
+          <% value = c.value unless c.nil? %>
                   <input name="correction_factors[][value]" type="number" value="<%= value %>" step="0.01"/>
-                   <input name="correction_factors[][type_id]" value="<%= type.id %>"type="hidden" step="0.01"/>
+                   <input name="correction_factors[][type_id]" value="<%=s%>"type="hidden" step="0.01"/>
+                  <input name="correction_factors[][complexity]" value="Medium"type="hidden" step="0.01"/>
+        
+				<td style="padding:8px">
+          <% c = @context.correction_factors.where(:type_id => s, :complexity => 'High').first %>
+          <% value = c.value unless c.nil? %>
+                  <input name="correction_factors[][value]" type="number" value="<%= value %>" step="0.01"/>
+                   <input name="correction_factors[][type_id]" value="<%=s%>"type="hidden" step="0.01"/>
                   <input name="correction_factors[][complexity]" value="High"type="hidden" step="0.01"/>
-   			-->
-         </tr>
-        <% end %>
+        </tr>
+  <% } %>
 
 	</tbody>
 </table>
