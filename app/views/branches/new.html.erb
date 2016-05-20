@@ -2,8 +2,7 @@
 <h3 class="title"><%= l(:add_issue_branches) %></h3>
 
 <%= form_tag({:controller => 'branches',
-              :work_package => @work_package,
-              :project_id => @work_package.project_id},
+              :version => @version},
               :method => :post,
              :id => 'new-branch-form') do %>
 
@@ -11,10 +10,10 @@
       <% @repositories.each do |rep| %>
     <!--Condicional que mostra as branches apenas quando ainda não há uma branch associada a esta tarefa.
       Caso a branch de um repositório X seja selecionada, devem ser ocultadas as demais branches desse repositório -->
-      <% if Branch.where(:counter_repository_id => rep.id, :work_package_id => @work_package._id).first.nil?then %>
+      <% if Branch.where(:counter_repository_id => rep.id, :version_id => @version.id).first.nil?then %>
             <p><strong><%= "#{rep.name}" %></strong></p>
             <% rep.branches.each do |branch| %>
-                <% if Branch.where(:name => branch.name, :work_package_id => @work_package._id).first.nil?then %>
+                <% if Branch.where(:name => branch.name, :version_id => @version.id).first.nil?then %>
                 <p><%= radio_button_tag 'branch[branch_ids]['"#{rep.id}"']', "#{rep.id},#{branch.name}" %> <%= branch.name %></p>
                 <% end %>
       <% end %>
