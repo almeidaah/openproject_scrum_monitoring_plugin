@@ -11,6 +11,7 @@ module OpenProject::ScrumMonitoring::Patches::WorkPackagesControllerPatch
 
   module InstanceMethods
   	def update_diff
+      
   	  @work_package = WorkPackage.find(params[:id])
       @work_package.branches.each do |branch|
         branch.diff = branch.get_diff

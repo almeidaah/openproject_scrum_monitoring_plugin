@@ -19,6 +19,8 @@
     <% end %>
 <%else%>
   <%
+   @branch.update_diff(@branch.id)
+   @branch = Branch.where(:version_id => @version.id).first 
   url = {:controller => 'branches',
              :action => 'destroy',
              :version_id => @version.id,
@@ -27,7 +29,7 @@
      %>
 
   <h3>
-    Branch cadastrada : <b><%=@branch.name%></b>
+    Branch cadastrada : <b><%=@branch.name%> | Lines from master : <%=@branch.diff%></b> line(s)
     <%= link_to(l(:button_delete), url, :confirm => l(:text_are_you_sure), :method => :delete, :class => 'icon icon-delete') %>
   </h3>
       
