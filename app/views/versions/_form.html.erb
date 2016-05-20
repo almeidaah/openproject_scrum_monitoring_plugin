@@ -10,25 +10,26 @@
 <p><%= f.text_field :description, :size => 60 %></p>
 <p><%= f.select :status, Version::VERSION_STATUSES.collect {|s| [l("version_status_#{s}"), s]} %></p>
 
-<% if @version.id.nil? %>
+<% @branch = Branch.where(:version_id => @version.id).first %>
+
+<% if @branch.nil? then%>
     <%= link_to new_branch_path(:version_id => @version.id, :project_id => @project.id),class: 'button -alt-highlight' do %>
       <i class="button--icon icon-add"></i>
       <span class="button--text">Cadastrar Branch</span>
     <% end %>
 <%else%>
-	<% @branch = Branch.where(:version_id => @version.id).first %>
-	<%
-	url = {:controller => 'branches',
+  <%
+  url = {:controller => 'branches',
              :action => 'destroy',
              :version_id => @version.id,
              :branch_id => @branch.id
            }
-
      %>
-	<h3>
-		Branch cadastrada : <b><%=@branch.name%></b>
-		<%= link_to(l(:button_delete), url, :confirm => l(:text_are_you_sure), :method => :delete, :class => 'icon icon-delete') %>
-	</h3>
+
+  <h3>
+    Branch cadastrada : <b><%=@branch.name%></b>
+    <%= link_to(l(:button_delete), url, :confirm => l(:text_are_you_sure), :method => :delete, :class => 'icon icon-delete') %>
+  </h3>
       
 <%end%>
 

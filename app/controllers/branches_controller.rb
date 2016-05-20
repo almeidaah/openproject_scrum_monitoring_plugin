@@ -26,16 +26,15 @@ class BranchesController < ApplicationController
         @branches << branch
       end
     end
-    redirect_to version_path(@version)
+    redirect_to edit_version_path(@version)
 
   end
 
   def destroy
+    puts params
     @version = Version.find(params[:version_id])
-    @branch = Branch.where(:id => params[:branch_id], :version_id => @version.id)
-    puts "HEGOU RESTROY 3"
-    puts @branch.name
-    #@branch.destroy
+    @branch = Branch.find(params[:branch_id])
+    @branch.destroy
     redirect_to edit_version_path(@version)
   end
 
