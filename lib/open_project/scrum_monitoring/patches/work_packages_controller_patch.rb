@@ -5,7 +5,7 @@ module OpenProject::ScrumMonitoring::Patches::WorkPackagesControllerPatch
       base.class_eval do
       extend ClassMethods
       include InstanceMethods
-      before_filter :update_diff, :only => :show
+      #before_filter :update_diff, :only => :show
       end
   end
 
