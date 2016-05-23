@@ -31,7 +31,6 @@ class BranchesController < ApplicationController
   end
 
   def destroy
-    puts params
     @version = Version.find(params[:version_id])
     @branch = Branch.find(params[:branch_id])
     @branch.destroy

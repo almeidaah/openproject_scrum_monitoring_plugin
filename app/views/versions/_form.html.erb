@@ -10,30 +10,31 @@
 <p><%= f.text_field :description, :size => 60 %></p>
 <p><%= f.select :status, Version::VERSION_STATUSES.collect {|s| [l("version_status_#{s}"), s]} %></p>
 
-<% @branch = Branch.where(:version_id => @version.id).first %>
+<% @branches = Branch.where(:version_id => @version.id) %>
 
-<% if @branch.nil? then%>
     <%= link_to new_branch_path(:version_id => @version.id, :project_id => @project.id),class: 'button -alt-highlight' do %>
       <i class="button--icon icon-add"></i>
       <span class="button--text">Cadastrar Branch</span>
     <% end %>
-<%else%>
+
   <%
-   @branch.update_diff(@branch.id)
-   @branch = Branch.where(:version_id => @version.id).first 
+  @branches.each do |branch|
+
+   branch.update_diff(branch.id)
+    
   url = {:controller => 'branches',
              :action => 'destroy',
              :version_id => @version.id,
-             :branch_id => @branch.id
+             :branch_id => branch.id
            }
      %>
 
   <h3>
-    Branch cadastrada : <b><%=@branch.name%> | Lines from master : <%=@branch.diff%></b> line(s)
+    Branch : <b><%=branch.name%> | Lines from master : <%=branch.diff%></b> line(s)
     <%= link_to(l(:button_delete), url, :confirm => l(:text_are_you_sure), :method => :delete, :class => 'icon icon-delete') %>
   </h3>
       
-<%end%>
+<%  end %>
 
 <p><%= f.text_field :wiki_page_title, :label => :label_wiki_page, :size => 60, :disabled => @project.wiki.nil? %></p>
 <p><%= f.text_field :start_date, :size => 10 %><%= calendar_for('version_start_date') %></p>
