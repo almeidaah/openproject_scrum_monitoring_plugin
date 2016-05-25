@@ -23,15 +23,9 @@ module OpenProject::ScrumMonitoring
                         caption: "Contextos",
                         html: { class: 'statuses icon2 icon-flag' }
           end
-          #Redmine::MenuManager.map :admin_menu do |menu|
-          #      menu.push :counter_repositories,
-          #              { controller: '/counter_repositories'},
-          #              caption: "Repositórios",
-          #              html: { class: 'icon2 icon-settings2' }
-          #    end
            end
 
     #:ProjectsController Removido
-    patches [:Group, :WorkPackage, :WorkPackagesController]
+    patches [:Group, :WorkPackage, :WorkPackagesController, :WorkPackagesHelper]
     end 
 end
