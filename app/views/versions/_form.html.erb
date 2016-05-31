@@ -10,6 +10,12 @@
 <p><%= f.text_field :description, :size => 60 %></p>
 <p><%= f.select :status, Version::VERSION_STATUSES.collect {|s| [l("version_status_#{s}"), s]} %></p>
 
+  <div class="form--field">
+     <label>Grupo de Trabalho:</label>
+     <%= collection_select(:context, :id, ::Context.all, :id, :description)%>
+  </div>
+
+
 <% @branches = Branch.where(:version_id => @version.id) %>
 
     <%= link_to new_branch_path(:version_id => @version.id, :project_id => @project.id),class: 'button -alt-highlight' do %>

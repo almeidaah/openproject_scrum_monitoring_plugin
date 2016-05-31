@@ -75,7 +75,6 @@ module OpenProject::ScrumMonitoring::Patches::WorkPackagePatch
     end
 
     def correction_factor
-      puts "CORREEEEEEEEEEEEEEEEEEEEEEEEEECTION"
       #correction_factors.where(:tracker_id => self.tracker.id, :complexity => complexity).first.value      
     end
 

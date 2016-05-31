@@ -5,10 +5,10 @@
     <%= f.text_field :lastname, :label => Group.human_attribute_name(:name), :required => true %>
   </div>
 
-   <div class="form--field">
+  <!-- <div class="form--field">
 		<label>Contexto de Trabalho do Grupo:</label>
 		<%= collection_select(:context, :id, ::Context.all, :id, :description)%>
-   </div>
+   </div> -->
 
   <%= render partial: 'customizable/form', locals: { form: f } %>
 </section>

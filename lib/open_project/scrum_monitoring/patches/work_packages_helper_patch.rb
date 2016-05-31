@@ -4,10 +4,10 @@ module OpenProject::ScrumMonitoring::Patches::WorkPackagesHelperPatch
   def self.included(base)
     base.module_eval do
       def show_scrummonitoring_columns(work_package)
-      	puts work_package
-      	custom_field_attributes = work_package_show_custom_fields(work_package)
-      	puts custom_field_attributes
-
+      	    custom_field_attributes = work_package_show_custom_fields(work_package)
+      	    member = Member.where(:project_id => work_package.project_id, :user_id => work_package.assigned_to_id)
+      	    puts member
+      	    #porcentagem_linhas = 
       end
 
      end

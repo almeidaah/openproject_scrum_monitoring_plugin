@@ -7,7 +7,7 @@ class GruposController < ApplicationController
   # GET /grupos/new
   def new
     @group = Group.new
-    @contexts = Context.all
+    #@contexts = Context.all
     respond_to do |format|
       format.html # new.html.erb
       format.xml  { render xml: @group }
@@ -27,13 +27,13 @@ class GruposController < ApplicationController
     respond_to do |format|
       if @group.save
 
-        @group_context = GroupContext.new
-        @context = params[:context]
-        @group_context.context_id = @context[:id]
+        #@group_context = GroupContext.new
+        #@context = params[:context]
+        #@group_context.context_id = @context[:id]
 
-        @group_context.group_id = @group._id
+        #@group_context.group_id = @group._id
 
-        @group_context.save
+        #@group_context.save
 
         flash[:notice] = l(:notice_successful_create)
         format.html { redirect_to(groups_path) }
@@ -74,4 +74,18 @@ class GruposController < ApplicationController
     end
   end
 
+  # DELETE /groups/1
+  # DELETE /groups/1.xml
+  def destroy
+    @group = Group.find(params[:id], include: :users)
+    @group.destroy
+
+    @group_context = GroupContext.where(:group_id => @group._id)
+    GroupContext.destroy(@group_context)
+
+    respond_to do |format|
+      format.html { redirect_to(groups_url) }
+      format.xml  { head :ok }
+    end
+  end
 end
