@@ -1,5 +1,5 @@
-<% html_title l(:label_administration), "#{l(:label_edit)} 'Contexto:' #{h @context.name}" %>
-<%= toolbar title: "Contexto: #{h @context.name}"%>
+<% html_title l(:label_administration), "#{l(:label_edit)} 'Grupo de Trabalho:' #{h @context.name}" %>
+<%= toolbar title: "Grupo de Trabalho: #{h @context.name}"%>
 
 <%= labelled_tabular_form_for(@context) do |f| %>
   <%= render :partial => 'form', :locals => { :f => f } %>

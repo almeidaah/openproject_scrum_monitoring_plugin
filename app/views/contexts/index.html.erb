@@ -1,10 +1,10 @@
-<% html_title l(:label_administration), "Contextos" %>
-<%= toolbar title: "Contextos" do %>
+<% html_title l(:label_administration), "Grupo de Trabalho" %>
+<%= toolbar title: "Grupo de Trabalho" do %>
   
   <li class="toolbar-item">
     <%= link_to new_context_path, class: 'button -alt-highlight' do %>
       <i class="button--icon icon-add"></i>
-      <span class="button--text">Cadastrar Contexto</span>
+      <span class="button--text">Cadastrar Grupo de Trabalho</span>
     <% end %>
   </li>
 <% end %>
@@ -13,7 +13,7 @@
 <table class="list">
   <thead>
     <tr align="left">
-      <th>Nome do Contexto</th>
+      <th>Nome do Grupo</th>
       <th>Descrição</th>
       <th>Produtividade Média(LoC/H)
       <th></th>

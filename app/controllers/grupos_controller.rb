@@ -88,4 +88,12 @@ class GruposController < ApplicationController
       format.xml  { head :ok }
     end
   end
+
+
+
+  
+  def teste
+    puts params
+  end
+
 end

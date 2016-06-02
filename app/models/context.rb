@@ -1,7 +1,7 @@
 class Context < ActiveRecord::Base
   extend Pagination::Model
 
-  has_many :correction_factors 
+  has_many :correction_factors
 
   def update_correction_factors(correction_factors, context_id)  
       correction_factors.each do |c|

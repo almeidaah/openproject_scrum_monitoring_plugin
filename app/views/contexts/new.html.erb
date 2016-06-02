@@ -1,6 +1,6 @@
-<% html_title l(:label_administration), "Novo Contexto"%>
+<% html_title l(:label_administration), "Novo Grupo de Trabalho"%>
 
-<%= toolbar title: "#{link_to "Contextos", new_context_path} &raquo; #{"Novo Contexto"}"%>
+<%= toolbar title: "#{link_to "Grupo de Trabalho", new_context_path} &raquo; #{"Novo Grupo de Trabalho"}"%>
 
 <%= labelled_tabular_form_for(@context) do |f| %>
   <%= render :partial => 'form', :locals => { :f => f } %>

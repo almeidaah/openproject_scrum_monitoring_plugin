@@ -4,6 +4,7 @@ OpenProject::Application.routes.draw do
   resources :grupos
   resources :counter_repositories
   resources :branches
+  resources :group_versions
 
   get 'contexts/new', :to => 'contexts#new'
   get 'admin/groups/new', :to => 'grupos#new'
@@ -13,5 +14,5 @@ OpenProject::Application.routes.draw do
   post 'admin/groups', :to => 'grupos#create'
   post 'branches/append', :to => 'branches#append'
   post 'branches', :to => 'branches#create'
-
+  put 'versions/:id', :to => 'group_versions#update'
 end

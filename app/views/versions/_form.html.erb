@@ -10,12 +10,24 @@
 <p><%= f.text_field :description, :size => 60 %></p>
 <p><%= f.select :status, Version::VERSION_STATUSES.collect {|s| [l("version_status_#{s}"), s]} %></p>
 
-  <div class="form--field">
-     <label>Grupo de Trabalho:</label>
-     <%= collection_select(:context, :id, ::Context.all, :id, :description)%>
+  <div >
+
+    <%  @group_version = GroupVersion.where(:version_id => params[:id]) %>
+
+    <%if @group_version.first.nil? then %>
+           
+            <label>Grupos de Trabalho da Sprint:</label>
+       <% @contexts = ::Context.all%>
+       <% @contexts.each do |context| %>
+          <%= radio_button_tag "context_id", "#{context.id}"%>
+          <strong><%= "#{context.name}" %></strong>
+          (<%= "#{context.description}"%>)
+          <br />    
+       <%end%>
+    <%end%>
+
   </div>
-
-
+  <br />
 <% @branches = Branch.where(:version_id => @version.id) %>
 
     <%= link_to new_branch_path(:version_id => @version.id, :project_id => @project.id),class: 'button -alt-highlight' do %>
@@ -59,3 +71,7 @@
 <% end %>
 
 </div>
+
+<script type="text/javascript">
+  
+</script>

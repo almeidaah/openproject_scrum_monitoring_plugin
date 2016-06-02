@@ -2,7 +2,6 @@ class ContextsController < ApplicationController
 
   layout 'admin'
   
-  before_filter :require_admin
 
   def index
     @contexts = Context.page(params[:page])

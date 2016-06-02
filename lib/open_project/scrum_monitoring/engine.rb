@@ -20,7 +20,7 @@ module OpenProject::ScrumMonitoring
           Redmine::MenuManager.map :admin_menu do |menu|
               menu.push :contexts,
                         { controller: '/contexts' },
-                        caption: "Contextos",
+                        caption: "Grupos de Trabalho",
                         html: { class: 'statuses icon2 icon-flag' }
           end
            end
