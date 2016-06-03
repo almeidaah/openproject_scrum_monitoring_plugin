@@ -12,7 +12,7 @@
 
   <div >
 
-    <%  @group_version = GroupVersion.where(:version_id => params[:id]) %>
+    <%  @group_version = GroupVersion.where(:version_id => params[:id]).all %>
 
     <%if @group_version.first.nil? then %>
            
@@ -24,10 +24,24 @@
           (<%= "#{context.description}"%>)
           <br />    
        <%end%>
+    <%else%>
+        <% @context = ::Context.where(:id => @group_version[0].context_id).all %>
+        <h4>
+
+        <%
+        urlDel = {:controller => 'group_versions',
+             :action => 'destroy',
+             :version_id => @version.id
+           }
+       %>
+              Grupo de trabalho associado : 
+              <b><%= @context[0].description %> </b>
+              <%= link_to(l(:button_delete), urlDel, :confirm => l(:text_are_you_sure), :method => :delete, :class => 'icon icon-delete') %>
+         </h4>
+
     <%end%>
 
   </div>
-  <br />
 <% @branches = Branch.where(:version_id => @version.id) %>
 
     <%= link_to new_branch_path(:version_id => @version.id, :project_id => @project.id),class: 'button -alt-highlight' do %>
@@ -47,10 +61,10 @@
            }
      %>
 
-  <h3>
+  <h4>
     Branch : <b><%=branch.name%> | Lines from master : <%=branch.diff%></b> line(s)
     <%= link_to(l(:button_delete), url, :confirm => l(:text_are_you_sure), :method => :delete, :class => 'icon icon-delete') %>
-  </h3>
+  </h4>
       
 <%  end %>
 
