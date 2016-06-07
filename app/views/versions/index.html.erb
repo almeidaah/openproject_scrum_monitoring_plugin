@@ -1,0 +1,84 @@
+<%= toolbar title: l(:label_roadmap) %>
+<% if @versions.empty? %>
+  <p class="nodata"><%= l(:label_no_data) %></p>
+<% else %>
+  <div id="roadmap">
+    <% @versions.each do |version| %>
+      <h3 class="version icon-context icon-version">
+        <%= link_to_version version, :name => h(version.name) %>
+      </h3>
+      <%= render :partial => 'versions/overview', :locals => {:version => version} %>
+      <%= render(:partial => "wiki/content", :locals => {:content => version.wiki_page.content}) if version.wiki_page %>
+      <% if (issues = @issues_by_version[version]) && issues.size > 0 %>
+        <strong class="related-issues-heading"><%= l(:label_related_work_packages) %></strong>
+        <%= form_tag({}) do -%>
+          <table class="list related-issues">
+            <%- issues.each do |issue| -%>
+              <tr class="hascontextmenu">
+                <td class="checkbox"><%= check_box_tag 'ids[]', issue.id %></td>
+                <td><%= link_to_work_package(issue, :project => (@project != issue.project)) %></td>
+              </tr>
+            <%- end -%>
+          </table>
+        <% end %>
+      <% end %>
+       <% @issues = @issues_by_version[version ] %>
+          <table class="list related-issues" border="2">
+                <tr >
+                  <td><b>#</b></td>
+                  <td><b>Subtype</b></td>
+                  <td><b>Estimated Time(Hours)</b></td>
+                  <td><b>Estimated Lines</b></td>
+                  <td><b>Spent Time</b></td>
+                </tr>
+            <%- issues.each do |issue| -%>
+              <tr class="hascontextmenu">
+                <% type = Type.find(issue.type_id)%>
+                <% if(type.id == 1) then%>
+                  <% customFieldValues = CustomValue.where(:customized_id => issue.id) %>
+                  <% @group_version = GroupVersion.where(:version_id => version.id) %>
+                  
+                  <% subtype = customFieldValues[0]%>
+                  <% complexity = customFieldValues[1]%>
+                  <% context_id = @group_version[0].context_id %>
+                  <% @correction_factor = CorrectionFactor.find(11)%>
+                  <% @correction_factor = correction_factor(complexity, subtype, context_id) %>
+
+                  <%= @correction_factor %>
+
+
+                  <td><%= issue.id %></td>
+                  <td><%= subtype %></td>
+                  <td><%= format("%.2f" ,calculated_estimated_time(issue.estimated_hours, complexity, subtype, context_id) )%></td>
+                  <td><%= format("%.2f" ,estimated_lines(issue.estimated_hours, complexity, subtype, context_id) )%>
+                  <td><%= format("%.2f" ,spent_time(issue.id))%></td>
+                <% end%>
+            <%- end -%>
+          </table>
+
+
+    <% end %>
+  </div>
+<% end %>
+<% content_for :sidebar do %>
+  <%= form_tag({}, :method => :get) do %>
+    <h3><%= l(:description_filter) %></h3>
+    <% @types.each do |type| %>
+      <label><%= check_box_tag "type_ids[]", type.id, (@selected_type_ids.include? type.id.to_s), :id => nil %>
+        <%=h type.name %></label><br />
+    <% end %>
+    <br />
+    <label for="completed"><%= check_box_tag "completed", 1, params[:completed] %> <%= l(:label_show_completed_versions) %></label>
+    <% if @project.descendants.active.any? %>
+      <%= hidden_field_tag 'with_subprojects', 0 %>
+      <br />
+      <label><%= check_box_tag 'with_subprojects', 1, @with_subprojects %> <%=l(:label_subproject_plural)%></label>
+    <% end %>
+    <p><%= submit_tag l(:button_apply), :class => 'button -tiny -round -highlight', :name => nil %></p>
+  <% end %>
+  <h3><%= l(:label_version_plural) %></h3>
+  <% @versions.each do |version| %>
+    <%= link_to format_version_name(version), "#{project_roadmap_url}##{version.name}" %><br />
+  <% end %>
+<% end %>
+<% html_title(l(:label_roadmap)) %>

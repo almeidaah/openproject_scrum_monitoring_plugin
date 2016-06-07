@@ -25,7 +25,6 @@ module OpenProject::ScrumMonitoring
           end
            end
 
-    #:ProjectsController Removido
-    patches [:Group, :WorkPackage, :WorkPackagesController, :WorkPackagesHelper]
+    patches [:WorkPackagesHelper]
     end 
 end
