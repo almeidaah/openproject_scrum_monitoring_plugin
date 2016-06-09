@@ -22,6 +22,9 @@
           </table>
         <% end %>
       <% end %>
+
+
+
        <% @issues = @issues_by_version[version ] %>
           <table class="list related-issues" border="2">
                 <tr >
@@ -30,9 +33,15 @@
                   <td><b>Estimated Time(Hours)</b></td>
                   <td><b>Estimated Lines</b></td>
                   <td><b>Spent Time</b></td>
+                  <td><b>% Done</b></td>
+                  <td><b>% Hours</b></td>
                 </tr>
+
+            <% sum_estimated_lines = 0 %>
+            <% sum_spent_time = 0 %>
+
             <%- issues.each do |issue| -%>
-              <tr class="hascontextmenu">
+              <tr>
                 <% type = Type.find(issue.type_id)%>
                 <% if(type.id == 1) then%>
                   <% customFieldValues = CustomValue.where(:customized_id => issue.id) %>
@@ -43,17 +52,53 @@
                   <% context_id = @group_version[0].context_id %>
                   <% @correction_factor = CorrectionFactor.find(11)%>
                   <% @correction_factor = correction_factor(complexity, subtype, context_id) %>
+                  
+                  <% estimated_lines = estimated_lines(issue.estimated_hours, complexity, subtype, context_id) %>
+                  <% sum_estimated_lines += estimated_lines %>
 
-                  <%= @correction_factor %>
-
+                  <% spent_time = spent_time(issue.id) %>
+                  <% sum_spent_time += spent_time %>
 
                   <td><%= issue.id %></td>
                   <td><%= subtype %></td>
                   <td><%= format("%.2f" ,calculated_estimated_time(issue.estimated_hours, complexity, subtype, context_id) )%></td>
-                  <td><%= format("%.2f" ,estimated_lines(issue.estimated_hours, complexity, subtype, context_id) )%>
-                  <td><%= format("%.2f" ,spent_time(issue.id))%></td>
+                  <td><%= format("%.2f" , estimated_lines)%>
+                  <td><%= format("%.2f" ,spent_time)%></td>
+                  <td><%= progress_bar issue.done_ratio, width: '80px'%></td>
+                  <td><%= calculated_hours_percentage(issue)%></td>
                 <% end%>
+            
             <%- end -%>
+
+              </tr>
+              <tr>
+              <td colspan="7">
+              <br />
+              <br />
+              </td>
+              </tr>
+              <tr>
+                <td colspan="7" align="center" ><b>Dados da Sprint : <%=version.name%></b></td>
+              </tr>
+              <tr align="center">
+                <td colspan="2"><b>Commited Lines [commitedLines]</td>
+                <td colspan="2"><b> % Lines [commitedlines/sum_estimated_lines]</td>
+                <td colspan="3"><b> Productivity [commitedlines/sum_spent_time]</td>
+              </tr>
+              <tr align="center">
+                <% @branches = Branch.where(:version_id => version.id) %>
+                <% @branches.each do |branch|
+                    branch.update_diff(branch.id)
+                  end
+                %>
+                 
+                <% commitedlines = @branches.sum(&:diff) %>
+                <td colspan="2"><%= commitedlines %></td>
+                <td colspan="2"><%= calculated_lines_percentage(commitedlines, sum_estimated_lines) %></td>
+                <td colspan="3"><%= format("%.2f" ,calculated_productivity(commitedlines, sum_spent_time))%></td>
+              </tr>
+
+
           </table>
 
 

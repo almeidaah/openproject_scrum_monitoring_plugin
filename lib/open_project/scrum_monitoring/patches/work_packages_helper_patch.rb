@@ -28,10 +28,30 @@ module OpenProject::ScrumMonitoring::Patches::WorkPackagesHelperPatch
               cond = ARCondition.new
 
               cond << "#{WorkPackage.table_name}.id = #{issue_id}"
-              puts cond.conditions
               @total_hours = TimeEntry.visible.sum(:hours, include: [:project, :work_package], conditions: cond.conditions).to_f
               return @total_hours
          end
+
+         def calculated_hours_percentage (work_package)    
+            spent_hours = spent_time(work_package.id)
+            estimated_hours = work_package.estimated_hours
+            calculate(spent_hours, estimated_hours) do 
+              (spent_hours.fdiv(estimated_hours) * 100.0).floor 
+            end        
+         end
+
+         def calculated_lines_percentage(commited_lines, estimated_lines)    
+            calculate(commited_lines, estimated_lines) do 
+              (commited_lines.fdiv(estimated_lines) * 100.0).floor 
+            end           
+          end
+
+         def calculated_productivity (commited_lines, spent_hours)
+            calculate(commited_lines, spent_hours) do 
+              commited_lines.fdiv(spent_hours)   
+          end
+    end
+
 
 
          ################################################################################

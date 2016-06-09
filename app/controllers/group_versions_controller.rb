@@ -23,7 +23,6 @@ class GroupVersionsController < ApplicationController
 
   def destroy
     @group_version = GroupVersion.where(:version_id => params[:version_id]).all
-    puts "ACHOUUUUUUUUUUUUUUUU VAI"
     @group_version[0].destroy
     @version = Version.find(params[:version_id])
     redirect_to edit_version_path(@version)

@@ -89,11 +89,4 @@ class GruposController < ApplicationController
     end
   end
 
-
-
-  
-  def teste
-    puts params
-  end
-
 end
