@@ -1,0 +1,14 @@
+<%= error_messages_for :group %>
+<section class="form--section">
+
+  <div class="form--field">
+    <%= f.text_field :lastname, :label => Group.human_attribute_name(:name), :required => true %>
+  </div>
+
+  <!-- <div class="form--field">
+		<label>Trabalho do Grupo:</label>
+		<%= collection_select(:context, :id, ::Context.all, :id, :description)%>
+   </div> -->
+
+  <%= render partial: 'customizable/form', locals: { form: f } %>
+</section>

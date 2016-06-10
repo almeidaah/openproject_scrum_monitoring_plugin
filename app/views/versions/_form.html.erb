@@ -52,9 +52,9 @@
   <%
   @branches.each do |branch|
 
-   branch.update_diff(branch.id)
-    
-  url = {:controller => 'branches',
+  branch.update_diff(branch.id)
+
+  url = {    :controller => 'branches',
              :action => 'destroy',
              :version_id => @version.id,
              :branch_id => branch.id

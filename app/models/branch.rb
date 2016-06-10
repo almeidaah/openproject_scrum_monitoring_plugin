@@ -9,11 +9,11 @@ class Branch < ActiveRecord::Base
   belongs_to :work_package
   belongs_to :counter_repository
 
-    def update_diff(branch_id)
-        branch = Branch.find(branch_id)
-        branch.diff = branch.get_diff
-        branch.save!
-      end
+  def update_diff(branch_id)
+     branch = Branch.find(branch_id)
+     branch.diff = branch.get_diff
+     branch.save!
+  end
 
   def get_diff
     count = 0

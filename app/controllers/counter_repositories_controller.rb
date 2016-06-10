@@ -10,15 +10,17 @@ class CounterRepositoriesController < ApplicationController
     flash[:notice] = l(:notice_successful_create)
 
     @project = Project.find(params[:project_id])
-    redirect_to :controller => 'projects/' << @project.name.downcase.tr(' ', '_'), :action => 'settings', :tab => 'repository'
+    redirect_to :controller => 'projects/' << @project.identifier.downcase.tr(' ', '_'), :action => 'settings', :tab => 'repository'
 
   end
 
   def destroy
-     @counter_repository = params[:counter_repository]
+     @counter_repository = CounterRepository.find(params[:id])
      @counter_repository.destroy
+
+     @project = Project.find(@counter_repository.project_id)
      flash[:notice] = l(:notice_successful_delete)
-     redirect_to :controller => 'projects/' << @project.name.downcase.tr(' ', '_'), :action => 'settings', :tab => 'repository'
+     redirect_to :controller => 'projects/' << @project.identifier.downcase.tr(' ', '_'), :action => 'settings', :tab => 'repository'
   end
 
 end

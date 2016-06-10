@@ -2,7 +2,6 @@ class ContextsController < ApplicationController
 
   layout 'admin'
   
-
   def index
     @contexts = Context.page(params[:page])
     render action: 'index', layout: false if request.xhr?

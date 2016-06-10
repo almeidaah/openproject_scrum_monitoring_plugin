@@ -1,7 +1,6 @@
 class BranchesController < ApplicationController
 
   def new
-    #@work_package = WorkPackage.find(params[:work_package_id])
     @version = Version.find(params[:version_id])
     @repositories = CounterRepository.where(:project_id => params[:project_id]).all
   end
@@ -15,10 +14,9 @@ class BranchesController < ApplicationController
       if Branch.where(:version_id => @version.id, :name => branch_name).first.nil?
         repository_id = val.split(',')[0][0]
         repository = CounterRepository.find(repository_id)
-        branch = Branch.new
 
-        #substring para ignorar o repotitory_id, adicionado por causa do radiobutton em tela
-        branch.name = branch_name[2..branch_name.length]
+        branch = Branch.new
+        branch.name = branch_name.split(',')[1]
         branch.counter_repository = repository
         branch.version_id = @version.id
 
