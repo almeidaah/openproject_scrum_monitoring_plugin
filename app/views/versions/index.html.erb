@@ -1,4 +1,5 @@
 <%= toolbar title: l(:label_roadmap) %>
+
 <% if @versions.empty? %>
   <p class="nodata"><%= l(:label_no_data) %></p>
 <% else %>
@@ -7,13 +8,94 @@
       <h3 class="version icon-context icon-version">
         <%= link_to_version version, :name => h(version.name) %>
       </h3>
-      <%= render :partial => 'versions/overview', :locals => {:version => version} %>
-      <%= render(:partial => "wiki/content", :locals => {:content => version.wiki_page.content}) if version.wiki_page %>
-      <% if (issues = @issues_by_version[version]) && issues.size > 0 %>
+
+      <!--Calculo dos dados da Sprint-->
+       
+          <!-- atualização das linhas de diff de cada branch -->
+          <% @branches = Branch.where(:version_id => version.id) %>
+          <% @branches.each do |branch|
+              branch.update_diff(branch.id)
+             end
+          %>
+
+         <!-- soma do das linhas estimadas na Sprint -->
+         <% sum_estimated_lines = 0 %>
+         <!-- soma das linhas comitadas na sprint até o momento-->
+         <% commitedlines = @branches.sum(&:diff) %>
+         <!-- soma do tempo total estimado para a sprint -->
+         <% sum_estimated_time = 0 %>
+         <!-- soma do tempo total gasto na sprint até o momento-->
+         <% sum_spent_time = 0 %>
+         <!-- soma do percentual concluido das tarefas -->
+         <% sum_done_ratio = 0%>
+         <% task_count = 0%>
+
+         <!-- lista de tarefas da sprint(para listagem) -->
+         <% 
+            @issues = @issues_by_version[version] 
+            @issues.each do |issue| 
+              type = Type.find(issue.type_id)
+              if(type.id == 1) then
+                sum_spent_time +=  spent_time(issue.id) 
+                sum_estimated_lines += ticket_size(issue)
+                sum_done_ratio += issue.done_ratio
+                task_count += 1
+                
+                customFieldValues = CustomValue.where(:customized_id => issue.id) 
+                group_version = GroupVersion.where(:version_id => version.id)
+                context = ::Context.where(:id => group_version[0].context_id)
+                subtype = customFieldValues[0]
+                complexity = customFieldValues[1]
+                ajusted_hours = calculated_estimated_time(issue.estimated_hours, complexity, subtype, group_version[0].context_id)
+
+                sum_estimated_time += ajusted_hours
+
+              end
+            end
+         %>
+
+      <!--Fim Calculo dos dados da Sprint -->
+      <h4>
+        <b>Grupo de Trabalho da Sprint:</b>
+        <%=context[0].name%>
+        
+        <br />
+
+        <b>Detalhes do Grupo :</b>
+        <%= context[0].description %>
+
+        <br />
+      </h4>
+      <table>
+          <thead align="center"><h3>Dados da Sprint</h3></thead>
+         <tr align="center">
+              <td ><b>Total estimated lines</td>
+              <td ><b>Commited lines</td>
+              <td ><b> % Lines </td>
+              <td ><b>Total estimated hours</td>
+              <td ><b>Total spent hours</td>
+              <td ><b>% Hours</td>
+              <td ><b>% Done</td>
+              <td ><b>Sprint Productivity</td>
+         </tr>
+         <tr  align="center">
+              <td ><%=sum_estimated_lines%></td>
+              <td ><%=format("%.2f" , commitedlines)%></td>
+              <td ><%=format("%.2f" , calculated_lines_percentage(commitedlines, sum_estimated_lines))%> %</td>
+              <td ><%=sum_estimated_time%></td>
+              <td ><%=format("%.2f" ,sum_spent_time)%></td>
+              <td ><%=format("%.2f" , (sum_spent_time/sum_estimated_time)*100)%> %</td>
+              <td ><%= progress_bar sum_done_ratio/task_count%></td>
+              <td ><%= format("%.1f" ,calculated_productivity(commitedlines, sum_spent_time))%></td>
+         </tr>
+      </table>
+
+      <% if  @issues && @issues.size > 0 %>
         <strong class="related-issues-heading"><%= l(:label_related_work_packages) %></strong>
         <%= form_tag({}) do -%>
           <table class="list related-issues">
-            <%- issues.each do |issue| -%>
+          <br />
+            <%- @issues.each do |issue| -%>
               <tr class="hascontextmenu">
                 <td class="checkbox"><%= check_box_tag 'ids[]', issue.id %></td>
                 <td><%= link_to_work_package(issue, :project => (@project != issue.project)) %></td>
@@ -23,83 +105,54 @@
         <% end %>
       <% end %>
 
+           <h4> Detailed Tasks </h4>
 
-
-       <% @issues = @issues_by_version[version ] %>
           <table class="list related-issues" border="2">
                 <tr >
                   <td><b>#</b></td>
                   <td><b>Subtype</b></td>
-                  <td><b>Estimated Time(Hours)</b></td>
-                  <td><b>Estimated Lines</b></td>
+                  <td><b>Complexity</b></td>
+                  <td><b>Est. Time(Ajusted)</b></td>
+                  <td><b>Est. Lines</b></td>
                   <td><b>Spent Time</b></td>
                   <td><b>% Done</b></td>
                   <td><b>% Hours</b></td>
                 </tr>
 
-            <% sum_estimated_lines = 0 %>
-            <% sum_spent_time = 0 %>
 
-            <%- issues.each do |issue| -%>
+            <%- @issues.each do |issue| -%>
               <tr>
                 <% type = Type.find(issue.type_id)%>
                 <% if(type.id == 1) then%>
                   <% customFieldValues = CustomValue.where(:customized_id => issue.id) %>
-                  <% @group_version = GroupVersion.where(:version_id => version.id) %>
-                  
+                  <% group_version = GroupVersion.where(:version_id => version.id) %>
                   <% subtype = customFieldValues[0]%>
                   <% complexity = customFieldValues[1]%>
-                  <% context_id = @group_version[0].context_id %>
-                  <% @correction_factor = CorrectionFactor.find(11)%>
+                  <% context_id = group_version[0].context_id %>
                   <% @correction_factor = correction_factor(complexity, subtype, context_id) %>
                   
-                  <% estimated_lines = estimated_lines(issue.estimated_hours, complexity, subtype, context_id) %>
-                  <% sum_estimated_lines += estimated_lines %>
-
-                  <% spent_time = spent_time(issue.id) %>
-                  <% sum_spent_time += spent_time %>
-
                   <td><%= issue.id %></td>
+
                   <td><%= subtype %></td>
+                  
+                  <td><%= complexity %></td>
+                  
                   <td><%= format("%.2f" ,calculated_estimated_time(issue.estimated_hours, complexity, subtype, context_id) )%></td>
-                  <td><%= format("%.2f" , estimated_lines)%>
-                  <td><%= format("%.2f" ,spent_time)%></td>
-                  <td><%= progress_bar issue.done_ratio, width: '80px'%></td>
-                  <td><%= calculated_hours_percentage(issue)%></td>
+                  
+                  <td><%= format("%.2f" , ticket_size(issue))%>
+                  
+                  <td><%= format("%.2f" ,spent_time(issue.id))%></td>
+                  
+                  <td><%= progress_bar issue.done_ratio, width: '90px'%></td>
+                  
+                  <td><%= format("%.1f",calculated_hours_percentage(issue))%></td>
+
                 <% end%>
             
             <%- end -%>
 
               </tr>
-              <tr>
-              <td colspan="7">
-              <br />
-              <br />
-              </td>
-              </tr>
-              <tr>
-                <td colspan="7" align="center" ><b>Dados da Sprint : <%=version.name%></b></td>
-              </tr>
-              <tr align="center">
-                <td colspan="2"><b>Commited Lines [commitedLines]</td>
-                <td colspan="2"><b> % Lines [commitedlines/sum_estimated_lines]</td>
-                <td colspan="3"><b> Productivity [commitedlines/sum_spent_time]</td>
-              </tr>
-              <tr align="center">
-                <% @branches = Branch.where(:version_id => version.id) %>
-                <% @branches.each do |branch|
-                    branch.update_diff(branch.id)
-                  end
-                %>
-                 
-                <% commitedlines = @branches.sum(&:diff) %>
-                <td colspan="2"><%= commitedlines %></td>
-                <td colspan="2"><%= calculated_lines_percentage(commitedlines, sum_estimated_lines) %></td>
-                <td colspan="3"><%= format("%.2f" ,calculated_productivity(commitedlines, sum_spent_time))%></td>
-              </tr>
-
-
-          </table>
+         </table>
 
 
     <% end %>

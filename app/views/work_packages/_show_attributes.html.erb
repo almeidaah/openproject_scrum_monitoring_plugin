@@ -10,7 +10,11 @@
           <dt class="attributes-key-value--key">Size:</dt>
           <dd class="attributes-key-value--value-container"> <%=ticket_size(work_package) %> lines </dd>
           <dt class="attributes-key-value--key">Inspection Prep. Time:</dt>
-          <dd class="attributes-key-value--value-container"> <%=Time.at(inspection_preparation_time(work_package)).utc.strftime("%H:%M") %> hours</dd>
+          <dd class="attributes-key-value--value-container"> 
+          <%=inspection_preparation_time(work_package)%> hours</dd>
+          <dt class="attributes-key-value--key">Total Task Time: </dt>
+          <dd class="attributes-key-value--value-container"> 
+          <%= total_time(work_package)%> hours</dd>
         <%end%>
       </dl>
 
@@ -23,11 +27,11 @@
         <% unless work_package.fixed_version_id.nil? %>
           <dt class="attributes-key-value--key">Inspection Time:</dt>
           <dd class="attributes-key-value--value-container"> 
-            <%=Time.at(inspection_time(work_package)).utc.strftime("%H:%M") %> hours
+            <%=inspection_time(work_package)%> hours
           </dd>
           <dt class="attributes-key-value--key">Inspection Rework Time:</dt>
           <dd class="attributes-key-value--value-container">
-            <%=Time.at(rework_time(work_package)).utc.strftime("%H:%M") %> hours
+            <%=rework_time(work_package)%> hours
           </dd>
         <%end%>
       </dl>
