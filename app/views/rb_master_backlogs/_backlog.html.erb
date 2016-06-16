@@ -1,0 +1,96 @@
+<% folded = current_user.backlogs_preference(:versions_default_fold_state) == "closed" %>
+<div class="backlog" id="backlog_<%= backlog.sprint.id %>">
+  <div class="header">
+    <%= render_backlog_menu backlog %>
+    <%= render :partial => "rb_sprints/sprint", :object => backlog.sprint %>
+    <div class="velocity"> </div>
+    <div class="toggler<%= ' closed' if folded %>"> </div>
+  </div>
+  <ul class="stories<%= ' closed' if folded %>">
+    <% reset_cycle 'stories' %>
+    <% backlog.stories.each_with_index do |story, index| %>
+      <% higher_item = index == 0 ? nil :
+                                    backlog.stories[index - 1] %>
+
+      <%= render :partial => "rb_stories/story",
+                 :locals => { :story => story,
+                              :higher_item => higher_item } %>
+    <% end %>
+  </ul>
+</div>
+
+<%version = backlog.sprint%>
+<!-- atualização das linhas de diff de cada branch -->
+  <% @branches = Branch.where(:version_id => version.id) 
+   @branches.each do |branch|
+      branch.update_diff(branch.id)
+     end
+  %>
+         <!-- soma do das linhas estimadas na Sprint -->
+         <% sum_estimated_lines = 0 %>
+         <!-- soma das linhas comitadas na sprint até o momento-->
+         <% commitedlines = @branches.sum(&:diff) %>
+         <!-- soma do tempo total estimado para a sprint -->
+         <% sum_estimated_time = 0 %>
+         <!-- soma do tempo total gasto na sprint até o momento-->
+         <% sum_spent_time = 0 %>
+         <!-- soma do percentual concluido das tarefas -->
+         <% sum_done_ratio = 0%>
+         <% task_count = 0%>
+
+          <!-- lista de tarefas da sprint(para listagem) -->
+         <% 
+            @issues = WorkPackage.where(:fixed_version_id => version.id) 
+            @issues.each do |issue| 
+              type = Type.find(issue.type_id)
+              if(type.id == 1) then
+                sum_spent_time +=  spent_time(issue.id) 
+                sum_estimated_lines += ticket_size(issue)
+                sum_done_ratio += issue.done_ratio
+                task_count += 1
+                
+                customFieldValues = CustomValue.where(:customized_id => issue.id) 
+                group_version = GroupVersion.where(:version_id => version.id)
+                context = ::Context.where(:id => group_version[0].context_id)
+                subtype = customFieldValues[0]
+                complexity = customFieldValues[1]
+                ajusted_hours = calculated_estimated_time(issue.estimated_hours, complexity, subtype, group_version[0].context_id)
+
+                sum_estimated_time += ajusted_hours
+
+              end
+            end
+         %>
+         <% average_done_ratio = sum_done_ratio/task_count %>
+<h4>
+  <b>Grupo de Trabalho da Sprint:</b>
+  <%=context[0].name%>
+
+  <br />
+
+  <b>Detalhes do Grupo :</b>
+  <%= context[0].description %>
+</h4>
+
+ <table style="width:100%">
+   <thead align="center"><h4>Dados da Sprint</h4></thead>
+   <tr align="center">
+        <td >Total estimated lines</td>
+        <td >Commited lines</td>
+        <td >% Lines </td>
+        <td >Total estimated hours</td>
+        <td >Total spent hours</td>
+        <td >% Hours</td>
+        <td >% Done</td>
+   </tr>
+   <tr  align="center">
+        <td ><%=sum_estimated_lines%></td>
+        <td ><%=format("%.2f" , commitedlines)%></td>
+        <td ><%=format("%.2f" , calculated_lines_percentage(commitedlines, sum_estimated_lines))%> </td>
+        <td ><%=sum_estimated_time%></td>
+        <td ><%=format("%.2f" ,sum_spent_time)%></td>
+        <td ><%=format("%.2f" , (sum_spent_time/sum_estimated_time)*100)%></td>
+        <td ><%= average_done_ratio %></td>
+   </tr>
+</table>
+

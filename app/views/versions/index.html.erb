@@ -12,8 +12,8 @@
       <!--Calculo dos dados da Sprint-->
        
           <!-- atualização das linhas de diff de cada branch -->
-          <% @branches = Branch.where(:version_id => version.id) %>
-          <% @branches.each do |branch|
+          <% @branches = Branch.where(:version_id => version.id) 
+           @branches.each do |branch|
               branch.update_diff(branch.id)
              end
           %>
@@ -80,11 +80,11 @@
          <tr  align="center">
               <td ><%=sum_estimated_lines%></td>
               <td ><%=format("%.2f" , commitedlines)%></td>
-              <td ><%=format("%.2f" , calculated_lines_percentage(commitedlines, sum_estimated_lines))%> %</td>
+              <td ><%=format("%.2f" , calculated_lines_percentage(commitedlines, sum_estimated_lines))%></td>
               <td ><%=sum_estimated_time%></td>
               <td ><%=format("%.2f" ,sum_spent_time)%></td>
-              <td ><%=format("%.2f" , (sum_spent_time/sum_estimated_time)*100)%> %</td>
-              <td ><%= average_done_ratio %> %</td>
+              <td ><%=format("%.2f" , (sum_spent_time/sum_estimated_time)*100)%></td>
+              <td ><%= average_done_ratio %></td>
          </tr>
       </table>
 
