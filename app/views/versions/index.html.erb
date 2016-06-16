@@ -53,7 +53,7 @@
               end
             end
          %>
-
+        <% average_done_ratio = sum_done_ratio/task_count %>
       <!--Fim Calculo dos dados da Sprint -->
       <h4>
         <b>Grupo de Trabalho da Sprint:</b>
@@ -66,7 +66,7 @@
 
         <br />
       </h4>
-      <table>
+      <table class="list related-issues">
           <thead align="center"><h3>Dados da Sprint</h3></thead>
          <tr align="center">
               <td ><b>Total estimated lines</td>
@@ -76,7 +76,6 @@
               <td ><b>Total spent hours</td>
               <td ><b>% Hours</td>
               <td ><b>% Done</td>
-              <td ><b>Sprint Productivity</td>
          </tr>
          <tr  align="center">
               <td ><%=sum_estimated_lines%></td>
@@ -85,8 +84,19 @@
               <td ><%=sum_estimated_time%></td>
               <td ><%=format("%.2f" ,sum_spent_time)%></td>
               <td ><%=format("%.2f" , (sum_spent_time/sum_estimated_time)*100)%> %</td>
-              <td ><%= progress_bar sum_done_ratio/task_count%></td>
-              <td ><%= format("%.1f" ,calculated_productivity(commitedlines, sum_spent_time))%></td>
+              <td ><%= average_done_ratio %> %</td>
+         </tr>
+      </table>
+
+      <table>
+          <thead align="center"><h3>Projeção da Sprint</h3><h4>*Projeção de Horas e Linhas até o fim da Sprint</h4></thead>
+         <tr align="center">
+              <td ><b>Hours Projection</td>
+              <td ><b>Lines Projection</td>
+         </tr>
+         <tr  align="center">
+              <td ><%= format("%.2f", (100*sum_spent_time)/ average_done_ratio)%></td>
+              <td><%= format("%.2f" , (100*commitedlines)/average_done_ratio) %></td>
          </tr>
       </table>
 
@@ -117,8 +127,8 @@
                   <td><b>Spent Time</b></td>
                   <td><b>% Done</b></td>
                   <td><b>% Hours</b></td>
+                  <td ><b>Projected Hours</td>
                 </tr>
-
 
             <%- @issues.each do |issue| -%>
               <tr>
@@ -143,10 +153,11 @@
                   
                   <td><%= format("%.2f" ,spent_time(issue.id))%></td>
                   
-                  <td><%= progress_bar issue.done_ratio, width: '90px'%></td>
+                  <td><%= issue.done_ratio %> %</td>
                   
                   <td><%= format("%.1f",calculated_hours_percentage(issue))%></td>
 
+                  <td><%= format("%.1f", projected_hours(spent_time(issue.id) , issue.done_ratio))%></td>
                 <% end%>
             
             <%- end -%>

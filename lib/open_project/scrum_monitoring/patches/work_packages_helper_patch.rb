@@ -42,6 +42,14 @@ module OpenProject::ScrumMonitoring::Patches::WorkPackagesHelperPatch
             calculate(commited_lines, spent_hours) do 
               commited_lines.fdiv(spent_hours)   
           end
+
+          def projected_lines(commited_lines, done_ratio)      
+            calculate(commited_lines, done_ratio) do 
+              (commited_lines*100).fdiv(done_ratio) 
+            end      
+          end
+
+          
     end
 
 
@@ -97,6 +105,12 @@ module OpenProject::ScrumMonitoring::Patches::WorkPackagesHelperPatch
           
           return total_hours + inspection_preparation_time(work_package) + inspection_time(work_package) + rework_time(work_package)
         end
+
+        def projected_hours(spent_hours, done_ratio)
+            calculate(spent_hours, done_ratio) do 
+              (spent_hours*100).fdiv(done_ratio) 
+            end      
+          end
 
         def calculate(x, y)
           if x && x != 0 && y != 0 && y 
